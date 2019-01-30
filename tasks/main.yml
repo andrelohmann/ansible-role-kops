@@ -1,30 +1,20 @@
 ---
-- name: Check packer version
-  shell: "packer --version 2>&1 | grep {{packer_version}}"
+- name: Check kops version
+  shell: "kops version 2>&1 | grep {{ kops_version }}"
   failed_when: false
   changed_when: false
-  register: packer_versions_match
+  register: kops_versions_match
 
 - include: download.yml
-  when: packer_versions_match.rc != 0
+  when: kops_versions_match.rc != 0
 
-- name: Install unzip to unarchive packer
-  apt:
-    name: "{{ packages }}"
-    state: latest
-    dpkg_options: 'force-confnew,force-confdef'
-    autoclean: yes
-    autoremove: yes
-    update_cache: yes
-    cache_valid_time: 3600
-  vars:
-    packages:
-    - unzip
-
-- name: Unarchive packer archive
-  unarchive:
-    src: /tmp/packer-{{ packer_version }}.zip
-    dest: "/usr/local/bin"
-    copy: no
-  when: packer_versions_match.rc != 0
+- name: copy kops to /usr/local/bin/
+  copy:
+    remote_src: yes
+    src: /tmp/kops-linux-amd64
+    dest: /usr/local/bin/kops
+    owner: root
+    group: root
+    mode: 0755
+  when: kops_versions_match.rc != 0
 ...
