@@ -1,0 +1,6 @@
+---
+- name: Download kops binary
+  get_url:
+    url: "https://github.com/kubernetes/kops/releases/download/{{ kops_version }}/kops-linux-amd64"
+    dest: /tmp/kops-linux-amd64
+...
