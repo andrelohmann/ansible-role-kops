@@ -1,6 +1,34 @@
 ---
+- name: Install curl
+  apt:
+    name: "{{ packages }}"
+    state: latest
+    dpkg_options: 'force-confnew,force-confdef'
+    autoclean: yes
+    autoremove: yes
+    update_cache: yes
+    cache_valid_time: 3600
+  vars:
+    packages:
+    - curl
+
+- name: extract latest version number
+  block:
+
+  - name: fetch latest kops version
+    shell: curl -s https://api.github.com/repos/kubernetes/kops/releases/latest | grep tag_name | cut -d '"' -f 4 | cut -d 'v' -f 2
+    args:
+      executable: /bin/bash
+    register: latest_kops_version
+
+  - name: set kops_version
+    set_fact:
+      kops_version: "{{ latest_kops_version.stdout }}"
+
+  when: kops_version == "latest"
+
 - name: Check kops version
-  shell: "kops version 2>&1 | grep {{ kops_version }}"
+  shell: "kops version --short 2>&1 | grep {{ kops_version }}"
   failed_when: false
   changed_when: false
   register: kops_versions_match
@@ -8,13 +36,4 @@
 - include: download.yml
   when: kops_versions_match.rc != 0
 
-- name: copy kops to /usr/local/bin/
-  copy:
-    remote_src: yes
-    src: /tmp/kops-linux-amd64
-    dest: /usr/local/bin/kops
-    owner: root
-    group: root
-    mode: 0755
-  when: kops_versions_match.rc != 0
 ...

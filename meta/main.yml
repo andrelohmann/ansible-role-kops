@@ -1,5 +1,6 @@
 ---
 galaxy_info:
+  role_name: kops
   author: andrelohmann
   description: ansible galaxy role to install kops
   company: smartformer UG

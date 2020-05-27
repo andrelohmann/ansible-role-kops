@@ -1,6 +1,9 @@
 ---
-- name: Download kops binary
+- name: Download kops
   get_url:
-    url: "https://github.com/kubernetes/kops/releases/download/{{ kops_version }}/kops-linux-amd64"
-    dest: /tmp/kops-linux-amd64
+    url: https://github.com/kubernetes/kops/releases/download/v{{ kops_version }}/kops-linux-amd64
+    dest: /usr/local/bin/kops
+    owner: root
+    group: root
+    mode: 0755
 ...

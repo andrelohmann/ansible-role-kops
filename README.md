@@ -13,14 +13,14 @@ This role requires ubuntu.
 Role Variables
 --------------
 
-    kops_version: 1.11.0
+    kops_version: 1.16.2 # defaults to 'latest'
 
 Example Playbook
 ----------------
 
     - hosts: kops
       roles:
-         - { role: andrelohmann.kops }
+         - andrelohmann.kops
 
 License
 -------
